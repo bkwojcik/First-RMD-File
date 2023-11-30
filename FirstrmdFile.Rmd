@@ -1,0 +1,117 @@
+---
+title: 'Activity #09'
+author: "Bridget Wojcik"
+date: "2023-11-03"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+
+```
+
+```{r loadPackages}
+#Load packages with groundhog to improve stability
+install.packages("groundhog")
+library("groundhog")
+pkgs <- c("firstpackage", "secondpackage", "thirdpackage")
+groundhog.library(pkgs, '2023-01-01') #Use the date that you started the project here
+```
+
+
+
+## Collatz Conjecture
+For this first section, I am introducing the data titled, Collatz Conjecture. It is based off activity #03 that we have previously done. We were given a peicwise function, to essentially translate into RStudio to be able to run code that does the same thing as the piecwise. The goal is to then show that piecewise function visually, as you can see in my code chunk below when you run it.
+
+
+```{r cars}
+# Load the ggplot2 library, a data visualization package in R.
+library(ggplot2)
+# Define a function named collatz that takes a single argument n.
+collatz <- function(n) {
+    # Check if n is equal to 1.
+  if(n==1) {
+    # If true, return 0.
+    return(0)
+  } else if( n %% 2 ==0) {
+    # If n is even, return 1 plus the result of calling collatz with n divided by 2.
+    return(1 + collatz(n/2))
+  } else {
+    # If n is odd, return 1 plus the result of calling collatz with 3n + 1.
+   return( 1+ collatz(3*n +1))
+ }
+}
+```
+In the code chunk above is the piecwise function written in code so when you plug in a number, it can spit out a value for you. 
+
+```{r}
+# Generate a vector of stopping times for the first 10,000 positive integers using the collatz function.
+stopping_times <- sapply(1:10000, collatz)
+
+# Create a data frame with a single column 'x' containing the stopping times.
+# This is done to prepare the data for visualization using ggplot2.
+ggplot(data.frame(x = stopping_times), aes(x)) +
+  
+   # Create a histogram of the stopping times with binwidth = 1.
+  # Fill the bars with blue color and add black borders.
+  geom_histogram(binwidth = 1, fill = "blue", color = "black") +
+  
+   # Set the title and axis labels for the plot.
+  labs(title = "Distribution of Stopping Times for the First 10,000 Positive Integers",
+       x = "Stopping Time", y = "Frequency")
+```
+From the plot above, you can see the distribution that the piecewise gives. As the stopping time increases, the frequency decreases, however, there is a point at around 90 in stopping time that the frequency decreases slightly. 
+
+
+## Diamonds Data
+
+In this next section, we are working with the diamonds data. We want to see how the weight of the carat might effect the price of the diamond. There are different ways in which you are able to view this effect. One of the most efficient ways, in my opinion, is to view a plot of it. 
+
+```{r pressure, echo=FALSE}
+# Load the ggplot2 library, which is a data visualization package in R.
+library(ggplot2)
+
+# Create a ggplot object using the 'diamonds' dataset, mapping 'carat' to the x-axis and 'price' to the y-axis.
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+  
+   # Add a layer to the plot with points representing each data point.
+
+geom_point() +
+ # Set labels for the x and y axes, and specify the title of the plot.
+labs(x = "Carat Weight", y = "Price", title = "Diamond Carat Weight vs. Price")
+```
+In the visualization above we see a dot plot do show the correlation between carat weight and price of the diamond. Based off the plot, I believe it is safe to assume that as the carat weight increases, the price of the diamond increases. 
+```{r}
+# Load the ggplot2 library for data visualization and dplyr for data manipulation.
+library(ggplot2)
+library(dplyr)
+
+# Load the 'diamonds' dataset that comes with ggplot2.
+data("diamonds")
+
+# Group the 'diamonds' dataset by the 'cut' variable.
+groupedData <- diamonds %>%
+  group_by(cut)
+
+# Summarize the grouped data, calculating various statistics for the 'price' variable.
+summary_table <- groupedData %>%
+  summarize(
+    count = n(),
+    minimum = min(price),
+    first_quartile = quantile(price, 0.25),
+    second_quartile = quantile(price, 0.5),
+    third_quartile = quantile(price, 0.75),
+    maximum = max(price),
+    mean = mean(price),
+    sd = sd(price)
+  )
+# Print the summary table.
+print(summary_table)
+```
+Above, we can see the summary table of the diamonds data. A summary data is good for not just making assumptions based off a plot, but truly seeing the numbers to make an even more logical conclusion of correlation based off the data. For example, we can see that Premium has the highest mean of 4584.258 which can be a useful point when making a conclusion.
+
+# What have we learned so far?
+
+Now that we are more than half way through the semester, we have learned a lot about R, statistics, analyzing, etc. We started with the basics of how to sort of opporate R studio and use it in the most efficient way possible, given that R is only supposed to make our lives easier. We have learned to write our own code, like the piecewise function above which is helpful so R studio can essentially calculate it for us. We have learned how to load data sets into R to take a closer look at the data and make observations based off of it. Not only that, but we have learned how to manipulate the data so we can see exactly what we want. For example, for the diamonds data, we only wanted to see the carat weight vs the price, so we knew how to manipulate that. We have also learned how to take a data set and tidy it so we can more efficiently take a closer look at it. Also, we have learned how to take maybe our own data, say in excel, and put that into R studio. We are now learning how to use R Markdown which is another Rstudio tool to make our lives easier. This is a good tool for organizing your code, and your analyzations, along with helping you when you need a more formal format like a presentation. There have been loads more detailed things we have learned so far in this course that all in all, is to make our lives easier when looking at data and analyzing it. 
