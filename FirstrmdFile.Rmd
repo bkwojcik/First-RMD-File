@@ -26,7 +26,7 @@ groundhog.library(pkgs, '2023-01-01') #Use the date that you started the project
 For this first section, I am introducing the data titled, Collatz Conjecture. It is based off activity #03 that we have previously done. We were given a peicwise function, to essentially translate into RStudio to be able to run code that does the same thing as the piecwise. The goal is to then show that piecewise function visually, as you can see in my code chunk below when you run it.
 
 
-```{r cars}
+```{r cars, echo=FALSE}
 # Load the ggplot2 library, a data visualization package in R.
 library(ggplot2)
 # Define a function named collatz that takes a single argument n.
@@ -46,17 +46,18 @@ collatz <- function(n) {
 ```
 In the code chunk above is the piecwise function written in code so when you plug in a number, it can spit out a value for you. 
 
-```{r}
+```{r, echo=FALSE}
 # Generate a vector of stopping times for the first 10,000 positive integers using the collatz function.
 stopping_times <- sapply(1:10000, collatz)
 
 # Create a data frame with a single column 'x' containing the stopping times.
-# This is done to prepare the data for visualization using ggplot2.
-ggplot(data.frame(x = stopping_times), aes(x)) +
-  
-   # Create a histogram of the stopping times with binwidth = 1.
-  # Fill the bars with blue color and add black borders.
+df <- data.frame(x=stopping_times)
+
+#Create a histogram of the stopping times
+#Fill the bars with blue color and add black borders
+ggplot(df, aes(x)) +
   geom_histogram(binwidth = 1, fill = "blue", color = "black") +
+  
   
    # Set the title and axis labels for the plot.
   labs(title = "Distribution of Stopping Times for the First 10,000 Positive Integers",
@@ -80,7 +81,14 @@ ggplot(data = diamonds, aes(x = carat, y = price)) +
 
 geom_point() +
  # Set labels for the x and y axes, and specify the title of the plot.
-labs(x = "Carat Weight", y = "Price", title = "Diamond Carat Weight vs. Price")
+labs(x = "Carat Weight", y = "Price", title = "Diamond Carat Weight vs. Price") +
+
+#Add a boxplot of the 'price' variable to the right of the scatter plot 
+geom_boxplot(aes(x=NULL, y= price), fill= "green", width = 0.2, position = 
+"identity")+
+
+#Adjust the appearance of the added boxplot layer.
+theme(legend.position= "none") 
 ```
 In the visualization above we see a dot plot do show the correlation between carat weight and price of the diamond. Based off the plot, I believe it is safe to assume that as the carat weight increases, the price of the diamond increases. 
 ```{r}
@@ -108,7 +116,20 @@ summary_table <- groupedData %>%
     sd = sd(price)
   )
 # Print the summary table.
+cat("\nSummary Table for Diamond Prices Grouped by Cut:\n")
 print(summary_table)
+
+#Create a boxplot to visualize the distribution of 'price' across different 'cut' categories
+ggplot(data=diamonds, aes(x=cut, y=price, fill=cut))+
+  geom_boxplot() +
+  labs(
+   title= "Distribution of Diamond Prices by Cut", 
+   x="Cut",
+   y= "Price",
+   caption= "Source: 'diamonds' dataset from ggplot2"
+  )+
+  theme_minimal() +
+  theme(legend.position = "none") 
 ```
 Above, we can see the summary table of the diamonds data. A summary data is good for not just making assumptions based off a plot, but truly seeing the numbers to make an even more logical conclusion of correlation based off the data. For example, we can see that Premium has the highest mean of 4584.258 which can be a useful point when making a conclusion.
 
